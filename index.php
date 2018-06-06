@@ -1,6 +1,13 @@
 <?php include("paginas/cabecalho.php") ?>
 <?php  include 'conexao.php';
 $cat = "*";
+if (isset($_GET['pageno'])) {
+    $pageno = $_GET['pageno'];
+} else {
+    $pageno = 1;
+}
+$no_of_records_per_page = 9;
+$offset = ($pageno-1) * $no_of_records_per_page;
 ?>
 <main>
   <div id="main">
@@ -35,7 +42,7 @@ $cat = "*";
         $sql = "select Nome,idFilmes,img from filmes order by ano DESC";
       }
       else{
-        $sql = "select Nome,idFilmes,img from filmes";
+        $sql = "SELECT * FROM filmes LIMIT $offset, $no_of_records_per_page";
       }
 
       $result = $conn->query($sql);
@@ -45,7 +52,7 @@ $cat = "*";
           echo "
           <div class='filme col-lg-4 col-md-6 col-sm-12'>
             <div class='card'>
-              <img class='card-img-top' height='35%' width='auto' src='./src/img/logo/". $row["img"] ."' alt='Card image cap'>
+              <img class='card-img-top' height='35%' width='auto' src='". $row["img"] ."' alt='Card image cap'>
               <div class='card-body'>
                 <h5 class='card-title text-center'>". $row["Nome"] ."</h5>
                 <p class='card-text '></p>
@@ -67,25 +74,30 @@ $cat = "*";
       </div>
     </div>
   </div>
-  <nav aria-label="Page navigation example">
-    <ul class="pagination btn-sm justify-content-center">
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-          <span class="sr-only">Previous</span>
-        </a>
+  <?php
+
+      $total_pages_sql = "SELECT COUNT(*) FROM filmes";
+      $result = mysqli_query($conn,$total_pages_sql);
+      $total_rows = mysqli_fetch_array($result)[0];
+      $total_pages = ceil($total_rows / $no_of_records_per_page);
+
+      $sql = "SELECT * FROM filmes LIMIT $offset, $no_of_records_per_page";
+      $res_data = mysqli_query($conn,$sql);
+      while($row = mysqli_fetch_array($res_data)){
+          //here goes the data
+      }
+      mysqli_close($conn);
+  ?>
+  <ul class="pagination btn-sm justify-content-center">
+      <li class="page-link "><a href="?pageno=1">Primeiro</a></li>
+      <li class="page-link <?php if($pageno <= 1){ echo 'disabled'; } ?>">
+          <a href="<?php if($pageno <= 1){ echo '#'; } else { echo "?pageno=".($pageno - 1); } ?>">Anterior</a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-          <span class="sr-only">Next</span>
-        </a>
+      <li class="page-link <?php if($pageno >= $total_pages){ echo 'disabled'; } ?>">
+          <a href="<?php if($pageno >= $total_pages){ echo '#'; } else { echo "?pageno=".($pageno + 1); } ?>">Proximo</a>
       </li>
-    </ul>
-  </nav>
+      <li class="page-link"><a href="?pageno=<?php echo $total_pages; ?>"> Utimo</a></li>
+  </ul>
 </main>
 <?php include("paginas/rodape.php") ?>
 </html>
