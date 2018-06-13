@@ -6,7 +6,7 @@ if (isset($_GET['pageno'])) {
 } else {
     $pageno = 1;
 }
-$no_of_records_per_page = 9;
+$no_of_records_per_page = 8;
 $offset = ($pageno-1) * $no_of_records_per_page;
 ?>
 <main>
@@ -50,7 +50,7 @@ $offset = ($pageno-1) * $no_of_records_per_page;
         // output data of each row
         while($row = $result->fetch_assoc()) {
           echo "
-          <div class='filme col-lg-4 col-md-6 col-sm-12'>
+          <div class='filme col-lg-3 col-md-6 col-sm-12'>
             <div class='card'>
               <img class='card-img-top' height='35%' width='auto' src='". $row["img"] ."' alt='Card image cap'>
               <div class='card-body'>
@@ -96,7 +96,7 @@ $offset = ($pageno-1) * $no_of_records_per_page;
       <li class="page-link <?php if($pageno >= $total_pages){ echo 'disabled'; } ?>">
           <a href="<?php if($pageno >= $total_pages){ echo '#'; } else { echo "?pageno=".($pageno + 1); } ?>">Proximo</a>
       </li>
-      <li class="page-link"><a href="?pageno=<?php echo $total_pages; ?>"> Utimo</a></li>
+      <li class="page-link"><a href="?pageno=<?php echo $total_pages; ?>"> Ultimo</a></li>
   </ul>
 </main>
 <?php include("paginas/rodape.php") ?>
