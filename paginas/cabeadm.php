@@ -34,10 +34,6 @@
               </div>
             </div>
           </div>
-
-          <li class="nav-item active ">
-            <a class="nav-link" href="paginas/relatorio.php"><button type="button" class="btn btn-outline-light btn-sm">RELATORIOS</button><span class="sr-only">(current)</span></a>
-          </li>
         </ul>
       </div>
     </nav>
